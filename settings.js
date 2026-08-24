@@ -37,7 +37,7 @@ global.emoji  = '🔴'
 global.emoji2 = '🩸'
 global.emoji3 = '🔗'
 
-global.icon      = 'https://files.catbox.moe/5lj1m4.jpeg'
+global.icon      = 'https://files.catbox.moe/meq9ob.jpeg'
 global.banner    = 'https://i.pinimg.com/736x/30/7e/3f/307e3f2df6f4a735f659c6f28a4fc399.jpg'
 global.bannerUrl = global.banner
 global.avatar    = global.icon
