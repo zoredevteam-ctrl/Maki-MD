@@ -2,34 +2,59 @@ import { exec } from 'child_process'
 import { buildCtx } from '../../core/system/context.js'
 
 const handler = async (m, { conn }) => {
-    const ctx = await buildCtx()
+    const ctx  = await buildCtx()
+    const start = Date.now()
 
-    await conn.sendMessage(m.chat, {
-        text: '⊚ Verificando actualizaciones...',
+    const sent = await conn.sendMessage(m.chat, {
+        text: '〔 ◈ 〕Verificando repositorio...',
         contextInfo: ctx
     }, { quoted: m })
 
-    exec('git pull', async (err, stdout, stderr) => {
+    exec('git fetch --all && git pull', async (err, stdout, stderr) => {
+        const elapsed = ((Date.now() - start) / 1000).toFixed(1)
+
         if (err) {
-            return conn.sendMessage(m.chat, {
+            await conn.sendMessage(m.chat, {
                 text:
-                    `⊚ *ERROR AL ACTUALIZAR*\n` +
-                    `> ${err.message.slice(0, 300)}`,
-                contextInfo: ctx
-            }, { quoted: m })
+                    `〔 ✖ 〕*Actualización fallida*\n\n` +
+                    `> ${err.message.slice(0, 400)}\n\n` +
+                    `> ◌ Tiempo: ${elapsed}s`,
+                edit: sent.key
+            })
+            return m.react('✖️')
         }
 
-        const output = stdout?.trim() || stderr?.trim() || 'Sin cambios.'
-        const alreadyUpdated = output.includes('Already up to date') || output.includes('Ya está actualizado')
+        const raw     = (stdout || stderr || '').trim()
+        const updated = !raw.includes('Already up to date') && !raw.includes('Ya está actualizado') && raw.length > 0
+
+        const lines = raw
+            .split('\n')
+            .filter(l => l.trim())
+            .slice(0, 6)
+            .map(l => `> ◌ ${l.trim()}`)
+            .join('\n')
+
+        if (!updated) {
+            await conn.sendMessage(m.chat, {
+                text:
+                    `〔 ◈ 〕*Sin cambios pendientes*\n\n` +
+                    `> ◌ El repositorio ya está en su versión más reciente.\n` +
+                    `> ◌ Tiempo: ${elapsed}s`,
+                edit: sent.key
+            })
+            return m.react('✅')
+        }
 
         await conn.sendMessage(m.chat, {
-            text: alreadyUpdated
-                ? `⊚ *LUTE · ACTUALIZACIÓN*\n> Ya estás en la versión más reciente.`
-                : `⊚ *LUTE · ACTUALIZACIÓN COMPLETADA*\n\n${output}\n\n> Reinicia el bot para aplicar los cambios.`,
-            contextInfo: ctx
-        }, { quoted: m })
+            text:
+                `〔 ◈ 〕*Actualización completada*\n\n` +
+                `${lines}\n\n` +
+                `> ◌ Tiempo: ${elapsed}s\n` +
+                `> ◌ Reinicia el bot para aplicar los cambios.`,
+            edit: sent.key
+        })
 
-        await m.react(alreadyUpdated ? '✅' : '🪶')
+        m.react('✅')
     })
 }
 
