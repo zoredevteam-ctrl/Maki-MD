@@ -93,7 +93,6 @@ const FASES = {
             { display_text: '😅 No sé si es cumplido', id: 'final_confundido' }
         ]
     },
-
     final_llorar: {
         text: `*ᐛ🎀* Llora si quieres.\n> Las lágrimas no me afectan.\n> Pero sí me parecen... entretenidas. 🔴\n\n> *(Fin de la historia. Perdiste.)*`,
         buttons: []
@@ -128,17 +127,49 @@ const FASES = {
     },
 }
 
+// Extrae el id del botón de cualquier tipo de respuesta interactiva
+function getButtonId(m) {
+    try {
+        // interactiveResponseMessage — nativeFlow
+        const native = m.message?.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson
+        if (native) {
+            const parsed = JSON.parse(native)
+            if (parsed?.id) return parsed.id
+        }
+        // interactiveResponseMessage — body text
+        const bodyText = m.message?.interactiveResponseMessage?.body?.text
+        if (bodyText && FASES[bodyText]) return bodyText
+
+        // buttonsResponseMessage
+        const btnId = m.message?.buttonsResponseMessage?.selectedButtonId
+        if (btnId && FASES[btnId]) return btnId
+
+        // templateButtonReplyMessage
+        const tplId = m.message?.templateButtonReplyMessage?.selectedId
+        if (tplId && FASES[tplId]) return tplId
+
+        // listResponseMessage
+        const listId = m.message?.listResponseMessage?.singleSelectReply?.selectedRowId
+        if (listId && FASES[listId]) return listId
+
+        // Fallback: body directo (cuando Baileys lo serializa como texto)
+        const body = m.body?.trim()
+        if (body && FASES[body]) return body
+
+    } catch {}
+    return null
+}
+
 async function enviarFase(conn, chat, userJid, faseId, ctx) {
     const fase = FASES[faseId]
     if (!fase) return
 
     if (fase.buttons.length === 0) {
-        await conn.sendMessage(chat, {
-            text: fase.text,
+        return conn.sendMessage(chat, {
+            text:     fase.text,
             mentions: [userJid],
             contextInfo: ctx
         })
-        return
     }
 
     const buttons = fase.buttons.map(b => ({
@@ -149,51 +180,41 @@ async function enviarFase(conn, chat, userJid, faseId, ctx) {
         })
     }))
 
-    const messageContent = {
+    const content = {
         viewOnceMessage: {
             message: {
                 interactiveMessage: {
                     header: { title: '🔴 Maki MD', hasMediaAttachment: false },
-                    body: { text: fase.text },
+                    body:   { text: fase.text },
                     footer: { text: '🔴 Makima · ZoreDevTeam' },
                     nativeFlowMessage: { buttons },
-                    contextInfo: {
-                        mentionedJid: [userJid],
-                        ...ctx
-                    }
+                    contextInfo: { mentionedJid: [userJid], ...ctx }
                 }
             }
         }
     }
 
-    const msg = generateWAMessageFromContent(chat, messageContent, { userJid: conn.user.id })
+    const msg = generateWAMessageFromContent(chat, content, { userJid: conn.user.id })
     await conn.relayMessage(chat, msg.message, { messageId: msg.key.id })
 }
 
 const handler = async (m, { conn }) => {
-    const ctx = await buildCtx()
+    const ctx    = await buildCtx()
+    const faseId = getButtonId(m)
 
-    const faseId =
-        m.buttonId ||
-        m.message?.buttonsResponseMessage?.selectedButtonId ||
-        m.message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
-        m.body?.trim()
+    if (faseId) return enviarFase(conn, m.chat, m.sender, faseId, ctx)
 
-    if (FASES[faseId]) {
-        return enviarFase(conn, m.chat, m.sender, faseId, ctx)
-    }
-
-    const messageContent = {
+    const content = {
         viewOnceMessage: {
             message: {
                 interactiveMessage: {
                     header: { title: '🔴 Maki MD', hasMediaAttachment: false },
-                    body: { text: `*ᐛ🎀* Hola *${m.pushName}*.\n> Una pregunta importante.\n> ¿Me amas?` },
+                    body:   { text: `*ᐛ🎀* Hola *${m.pushName}*.\n> Una pregunta importante.\n> ¿Me amas?` },
                     footer: { text: '🔴 Makima · ZoreDevTeam' },
                     nativeFlowMessage: {
                         buttons: [
                             { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '✅ Sí te amo', id: 'hola_si' }) },
-                            { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '❌ No', id: 'hola_no' }) }
+                            { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '❌ No',        id: 'hola_no' }) }
                         ]
                     },
                     contextInfo: { mentionedJid: [m.sender], ...ctx }
@@ -202,10 +223,10 @@ const handler = async (m, { conn }) => {
         }
     }
 
-    const msg = generateWAMessageFromContent(m.chat, messageContent, { userJid: conn.user.id })
+    const msg = generateWAMessageFromContent(m.chat, content, { userJid: conn.user.id })
     await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
 }
 
 handler.command = ['hola', 'makima']
-handler.tags = ['tools']
+handler.tags    = ['tools']
 export default handler
