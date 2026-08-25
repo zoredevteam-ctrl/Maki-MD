@@ -1,7 +1,7 @@
 const handler = async (m, { conn }) => {
   try {
     await conn.groupRevokeInvite(m.chat)
-    m.reply('✅ Enlace de invitación revocado correctamente')
+    m.reply('✅ Enlace de invitación revocado')
   } catch {
     m.reply('❌ Error al revocar el enlace')
   }
