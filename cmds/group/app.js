@@ -3,10 +3,10 @@ const handler = async (m, { conn, args }) => {
   if (!['on', 'off'].includes(op)) return m.reply('⚠️ Debes especificar si deseas *activar* o *desactivar* esta cosa')
 
   try {
-    await conn.groupSettingUpdate(m.chat, op === 'on' ? 'membership_approval' : 'not_membership_approval')
+    await conn.groupJoinApprovalMode(m.chat, op === 'on' ? 'on' : 'off')
     m.reply(`✅ Aprobación de admin para unirse ${op === 'on' ? 'activada' : 'desactivada'}`)
   } catch {
-    m.reply('❌ Violame y olvida esto')
+    m.reply('❌ Error al cambiar la configuración')
   }
 }
 
