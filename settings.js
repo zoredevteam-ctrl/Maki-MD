@@ -53,7 +53,7 @@ global.gitHubRepo  = 'https://github.com/zoredevteam-ctrl/makima-md'
 global.emailContact= 'Zoredevteam@gmail.com'
 
 global.newsletterJid  = '120363408182996815@newsletter'
-global.newsletterName = '🔴 𝐌𝐀𝐊𝐈𝐌𝐀'
+global.newsletterName = '˗ˏˋ ꒰ঌ 𝙼𝚊𝚔𝚒𝚖𝚊 ໒꒱ ˎˊ˗'
 
 global.apiConfigs = {
     stellar:  { baseUrl: 'https://api.stellarwa.xyz',  key: 'YukiWaBot' },
