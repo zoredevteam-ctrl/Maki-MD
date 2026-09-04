@@ -9,7 +9,7 @@ const PFP_Y    = 380
 const PFP_SIZE = 340
 const RADIUS   = PFP_SIZE / 2
 
-const BG_URL  = 'https://raw.githubusercontent.com/yosue891/Shadow-MD/refs/heads/main/IMG-20260818-WA0536.jpg'
+const BG_URL  = 'https://i.pinimg.com/736x/30/7e/3f/307e3f2df6f4a735f659c6f28a4fc399.jpg'
 const BG_PATH = join(process.cwd(), 'media', 'welcome-bg.jpg')
 
 const esc = (str) =>

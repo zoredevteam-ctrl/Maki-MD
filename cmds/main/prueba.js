@@ -49,7 +49,7 @@ const handler = async (m, { conn, who }) => {
                                 name: 'cta_copy',
                                 buttonParamsJson: JSON.stringify({
                                     display_text: '📋 Copiar Texto',
-                                    copy_code: '*I LOVE yosue Shadow-Bot uwu*'
+                                    copy_code: '*I LOVE arom Makima-Bot uwu*'
                                 })
                             },
                             {
