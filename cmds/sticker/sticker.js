@@ -3,20 +3,42 @@ import fs from 'fs'
 import util from 'util'
 import crypto from 'crypto'
 import { generateWAMessageFromContent, downloadContentFromMessage } from '@whiskeysockets/baileys'
-import webp from 'node-webpmux'
-import ffmpegStatic from 'ffmpeg-static'
 
 const execAsync = util.promisify(exec)
 
 const BOT_NAME = () => global.botName || 'Makima'
 const AUTHOR   = 'arom'
 
-function resolveFfmpeg() {
-    if (ffmpegStatic && fs.existsSync(ffmpegStatic)) return `"${ffmpegStatic}"`
+let _webpMod        = null
+let _ffmpegStaticP  = undefined
+
+async function getWebp() {
+    if (_webpMod === null) {
+        try { _webpMod = (await import('node-webpmux')).default } catch { _webpMod = false }
+    }
+    return _webpMod || null
+}
+
+async function getFfmpegStatic() {
+    if (_ffmpegStaticP === undefined) {
+        try {
+            const m = await import('ffmpeg-static')
+            _ffmpegStaticP = m.default || m || null
+        } catch { _ffmpegStaticP = null }
+    }
+    return _ffmpegStaticP
+}
+
+async function resolveFfmpeg() {
+    const p = await getFfmpegStatic()
+    if (p && fs.existsSync(p)) return `"${p}"`
     return 'ffmpeg'
 }
 
 async function addExif(webpBuffer, packname, author) {
+    const webp = await getWebp()
+    if (!webp) return null
+
     const img = new webp.Image()
     const stickerPackId = crypto.randomBytes(32).toString('hex')
     const json = {
@@ -213,7 +235,7 @@ const handler = async (m, { conn, args, usedPrefix }) => {
         style === 'neon' ? `${baseContain},edgedetect=low=0.08:high=0.2` :
         `${baseCoverCrop},format=rgba,${geqCircle}`
 
-    const ffmpegBin = resolveFfmpeg()
+    const ffmpegBin = await resolveFfmpeg()
 
     try {
         await execAsync(`${ffmpegBin} -version`)
@@ -242,10 +264,18 @@ const handler = async (m, { conn, args, usedPrefix }) => {
         await execAsync(ffmpegCmd)
         let stickerBuffer = await fs.promises.readFile(output)
 
-        const packName = BOT_NAME()
-        stickerBuffer = await addExif(stickerBuffer, packName, AUTHOR)
+        const withExif = await addExif(stickerBuffer, BOT_NAME(), AUTHOR)
+        if (withExif) stickerBuffer = withExif
 
         await conn.sendMessage(from, { sticker: stickerBuffer }, { quoted: m })
+
+        if (!withExif) {
+            await conn.sendMessage(
+                from,
+                { text: '⚠️ El sticker se envió sin el paquete personalizado. Instala `node-webpmux` para el nombre y autor:\n`npm install node-webpmux`' },
+                { quoted: m }
+            )
+        }
     } catch (e) {
         const err = (e?.stderr || e?.stdout || e?.message || String(e) || '').toString()
         await conn.sendMessage(
