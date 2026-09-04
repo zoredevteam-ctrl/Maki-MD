@@ -1,6 +1,3 @@
-// ─── STICKER · portado desde Aqua-Assistant y adaptado a Maki-MD ─────────────
-// Creador: arom · Bot: Makima
-
 import { exec } from 'child_process'
 import fs from 'fs'
 import util from 'util'
@@ -11,7 +8,6 @@ import ffmpegStatic from 'ffmpeg-static'
 
 const execAsync = util.promisify(exec)
 
-// Nombre del bot y creador del sticker
 const BOT_NAME = () => global.botName || 'Makima'
 const AUTHOR   = 'arom'
 
@@ -112,7 +108,6 @@ const handler = async (m, { conn, args, usedPrefix }) => {
         return
     }
 
-    // ── Detectar imagen o video (del propio mensaje o del citado) ──────────
     const imageMessage = m.quoted?.mtype === 'imageMessage' ? m.quoted.msg : (m.mtype === 'imageMessage' ? m.msg : null)
     const videoMessage = m.quoted?.mtype === 'videoMessage' ? m.quoted.msg : (m.mtype === 'videoMessage' ? m.msg : null)
 
