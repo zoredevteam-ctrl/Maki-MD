@@ -7,6 +7,8 @@ const handler = async (m, { conn, text }) => {
         }, { quoted: m })
     }
 
+    await conn.sendPresenceUpdate('composing', m.chat)
+
     const res = await fetch('https://aquire-api.vercel.app/ai/gemini?text=' + encodeURIComponent(text))
     const data = await res.json()
 
