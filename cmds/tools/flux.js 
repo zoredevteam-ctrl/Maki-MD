@@ -1,0 +1,20 @@
+const handler = async (m, { conn, text }) => {
+    if (!text) {
+        return conn.sendMessage(m.chat, {
+            text: '✦ Por favor escribe la descripción para generar la imagen.'
+        }, { quoted: m })
+    }
+
+    await conn.sendPresenceUpdate('composing', m.chat)
+
+    const url = 'https://aquire-api.vercel.app/ai/flux?prompt=' + encodeURIComponent(text)
+
+    await conn.sendMessage(m.chat, {
+        image: { url }
+    }, { quoted: m })
+}
+
+handler.command = ['flux']
+handler.tags = ['ai']
+
+export default handler
