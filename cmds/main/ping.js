@@ -8,8 +8,7 @@ const handler = async (m, { conn }) => {
     const ms = Date.now() - start
 
     await conn.sendMessage(m.chat, {
-        text: `𖣔 𝙋𝙄𝙉𝙂 𖣔\n> ✦ ${ms}ms`
-    }, {
+        text: `𖣔 𝙋𝙄𝙉𝙂 𖣔\n> ✦ ${ms}ms`,
         edit: sent.key
     })
 }
