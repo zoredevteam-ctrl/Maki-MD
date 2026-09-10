@@ -6,7 +6,7 @@ import fs from 'fs'
 const scriptPath = fileURLToPath(import.meta.url)
 
 global.owner = [
-    ['573107400303', '𝓐𝓪𝓻𝓸𝓶', true],
+    ['573107400303', '𝓐𝓪𝓻𝓸𝓷', true],
     ['584242773183', 'Owner', false],
     ['5363870693', '', true]
 ]
@@ -21,8 +21,10 @@ global.botTag     = '🔴 𝐌𝐀𝐊𝐈𝐌𝐀 · ZoreDevTeam'
 global.dev        = '© ZoreDevTeam'
 global.author     = '© ZoreDevTeam'
 global.libreria   = 'Baileys'
+
 global.api = 'https://nexevo.boxmine.xyz'
 global.apikey = 'ZoreDevTeam'
+
 global.sessionName = './sessions/owner'
 global.sessions    = './sessions/owner'
 
@@ -55,20 +57,6 @@ global.emailContact= 'Zoredevteam@gmail.com'
 
 global.newsletterJid  = '120363408182996815@newsletter'
 global.newsletterName = '˗ˏˋ ꒰ঌ 𝙼𝚊𝚔𝚒𝚖𝚊 ໒꒱ ˎˊ˗'
-
-global.apiConfigs = {
-    stellar:  { baseUrl: 'https://api.stellarwa.xyz',  key: 'YukiWaBot' },
-    xyro:     { baseUrl: 'https://api.xyro.site',       key: null },
-    yupra:    { baseUrl: 'https://api.yupra.my.id',     key: null },
-    vreden:   { baseUrl: 'https://api.vreden.web.id',   key: null },
-    delirius: { baseUrl: 'https://api.delirius.store',  key: null },
-    siputzx:  { baseUrl: 'https://api.siputzx.my.id',  key: null },
-}
-global.api  = { url: 'https://api.stellarwa.xyz', key: 'YukiWaBot' }
-global.APIs = Object.fromEntries(Object.entries(global.apiConfigs).map(([k, v]) => [k, v.baseUrl]))
-
-global.botOff = false
-global.opts   = { autoread: true, queque: false }
 
 let _bannerCache   = null
 let _bannerUrl     = null
