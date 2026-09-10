@@ -100,7 +100,7 @@ const handler = async (m, { conn, text }) => {
       `⏱️ Duración: ${duration}\n` +
       `👁️ Vistas: ${views}\n` +
       `📺 Calidad: ${quality}\n\n` +
-      `▶️ YouTube: ${youtubeUrl}`
+      `▶️ Link: ${youtubeUrl}`
 
     if (thumbnail) {
       await conn.sendMessage(
