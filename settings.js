@@ -21,7 +21,8 @@ global.botTag     = '🔴 𝐌𝐀𝐊𝐈𝐌𝐀 · ZoreDevTeam'
 global.dev        = '© ZoreDevTeam'
 global.author     = '© ZoreDevTeam'
 global.libreria   = 'Baileys'
-
+global.api = 'https://nexevo.boxmine.xyz'
+global.apikey = 'ZoreDevTeam'
 global.sessionName = './sessions/owner'
 global.sessions    = './sessions/owner'
 
