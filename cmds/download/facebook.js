@@ -4,7 +4,7 @@ const handler = async (m, { conn, text }) => {
   try {
     await conn.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
 
-    const videoUrl = `${api}/download/facebook?url=${encodeURIComponent(text)}&apikey=${apikey}`
+    const videoUrl = `${global.api}/download/facebook?url=${encodeURIComponent(text)}&apikey=${global.apikey}`
 
     await conn.sendMessage(
       m.chat,
