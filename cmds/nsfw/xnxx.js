@@ -1,4 +1,4 @@
-/* import axios from 'axios'
+import axios from 'axios'
 
 const handler = async (m, { conn, text }) => {
   if (!text) {
@@ -39,4 +39,3 @@ const handler = async (m, { conn, text }) => {
 handler.command = ['xnxx']
 handler.tags    = ['nsfw']
 export default handler
-*/
