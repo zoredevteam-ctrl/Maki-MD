@@ -7,7 +7,7 @@ const handler = async (m, { conn, text }) => {
   }
 
   try {
-    const searchRes = await axios.get(`https://aquire.koyeb.app/search/xnxx?q=${encodeURIComponent(text)}`)
+    const searchRes = await axios.get(`https://aquire-api.vercel.app/search/xnxx?q=${encodeURIComponent(text)}`)
     const data = searchRes.data
 
     if (!data.estado || !data.resultado.length) {
@@ -16,7 +16,7 @@ const handler = async (m, { conn, text }) => {
     }
 
     const first = data.resultado[0]
-    const downloadRes = await axios.get(`https://aquire.koyeb.app/download/xnxx?url=${encodeURIComponent(first.enlace)}`)
+    const downloadRes = await axios.get(`https://aquire-api.vercel.app/download/xnxx?url=${encodeURIComponent(first.enlace)}`)
     const detail = downloadRes.data
 
     if (detail.estado && detail.resultado) {
