@@ -105,7 +105,7 @@ async function sendInteractiveMenu(sock, m, menu) {
   const sender = getSender(m)
 
   const imageBuffer = await resizeImage(
-    'https://p.lempi.lat/d/js1uEz60.jpg',
+    'https://files.evogb.win/djH8OD.jpg',
     1000,
     700
   )
