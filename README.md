@@ -2,6 +2,10 @@
 # 𝐌𝐀𝐊𝐈 𝐌𝐃
 
 
+<p align="center">
+  <img src="https://files.evogb.win/RM4yj1.jpg" alt="Hola" width="270">
+</p>
+
   [Grupo Oficial](https://chat.whatsapp.com/Cm8kruBrv0m3izRR11XyJW?s=cl&p=a&mlu=4&ilr=4)
 
  [Canal Oficial](https://whatsapp.com/channel/0029Vb85bh7EAKWOM4Zw8N3G)
